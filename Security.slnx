@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/demo/">
+    <Project Path="demo/Demo/Demo.csproj" />
+  </Folder>
+  <Folder Name="/exercise/">
+    <Project Path="exercise/Exercise.Tests/Exercise.Tests.csproj" Id="2140a058-a783-4fb2-9462-ca4a35119442" />
+    <Project Path="exercise/Exercise/Exercise.csproj" />
+  </Folder>
+</Solution>

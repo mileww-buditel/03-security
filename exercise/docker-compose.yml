@@ -1,0 +1,49 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "!Passw0rd"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    healthcheck:
+      test: [ "CMD-SHELL", "pidof sqlservr || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    networks:
+      - backend
+
+  server:
+    build:
+      context: .
+      dockerfile: Exercise/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+      - backend
+
+  grader:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    tty: false
+    profiles:
+      - grading
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  sql_data:

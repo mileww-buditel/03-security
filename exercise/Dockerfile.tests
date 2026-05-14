@@ -1,0 +1,13 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+COPY ["Exercise/Exercise.csproj", "Exercise/"]
+COPY ["Exercise.Tests/Exercise.Tests.csproj", "Exercise.Tests/"]
+RUN dotnet restore "Exercise.Tests/Exercise.Tests.csproj"
+
+COPY . .
+
+RUN dotnet build "Exercise.Tests/Exercise.Tests.csproj" -c Release --no-restore
+
+WORKDIR /src/Exercise.Tests
+ENTRYPOINT ["dotnet", "run", "--no-build", "-c", "Release"]
